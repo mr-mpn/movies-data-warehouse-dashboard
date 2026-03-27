@@ -24,7 +24,7 @@ Source dataset = https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?
 def read_dataset(file_name):
     logger.info(f"Reading dataset : {file_name}")
     try:
-        df = pd.read_csv(f"./Source-DMS/dataset/{file_name}.csv")
+        df = pd.read_csv(f"./Source-DMS/dataset/{file_name}.csv" , low_memory = False)
         logger.info(f"Dataframe has been loaded")
         return df
     except Exception as e:
