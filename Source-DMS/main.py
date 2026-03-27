@@ -15,8 +15,8 @@ The goal is to:
 Source dataset = https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?resource=download
 '''
 
-def read_dataset(fileName):
-    return pd.read_csv(f"./dataset/{fileName}.csv")
+def read_dataset(file_name):
+    return pd.read_csv(f"./Source-DMS/dataset/{file_name}.csv")
 
 def connect_db():
     user = os.getenv("POSTGRES_USER")
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     conn  = connect_db()
 
     # Step 3: Write to the DB
-    ratings.to_sql("ratings", conn, if_exists="replace", index=False)
-    movies.to_sql("movies", conn, if_exists="replace", index=False)
+    ratings.to_sql("ratings_raw", conn, if_exists="replace", index=False)
+    movies.to_sql("movies_raw", conn, if_exists="replace", index=False)
 
 
