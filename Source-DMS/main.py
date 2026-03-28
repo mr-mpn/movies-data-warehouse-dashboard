@@ -1,10 +1,10 @@
+import sys
+sys.path.append(".")
+from Module.db_connector import connect_db
 import pandas as pd
-from sqlalchemy import create_engine
-import os
-from dotenv import load_dotenv
 import logging
 
-load_dotenv()
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
@@ -30,18 +30,6 @@ def read_dataset(file_name):
     except Exception as e:
         logger.warning(f"Error loading the file: {e}")
 
-
-def connect_db():
-    logger.info("Connecting to db : raw")
-    try:
-        user = os.getenv("POSTGRES_USER")
-        password = os.getenv("POSTGRES_PASSWORD")
-        db = os.getenv("POSTGRES_DB")
-        engine = create_engine(f"postgresql://{user}:{password}@localhost:5432/{db}")
-        logger.info("Connected to DB ...")
-        return engine
-    except Exception as e:
-        logger.warning(f"Error Connecting to DB : {e}")
 
 def write_to_db(df,table_name, conn):
     try:

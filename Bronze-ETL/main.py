@@ -1,10 +1,9 @@
+import sys
+sys.path.append(".")
+from Module.db_connector import connect_db
 import pandas as pd
-from sqlalchemy import create_engine
-import os
-from dotenv import load_dotenv
 import logging
 
-load_dotenv()
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
@@ -20,17 +19,6 @@ This ETL is used to:
 The data transformation 
 '''
 
-def connect_db():
-    logger.info("Connecting to db : raw")
-    try:
-        user = os.getenv("POSTGRES_USER")
-        password = os.getenv("POSTGRES_PASSWORD")
-        db = os.getenv("POSTGRES_DB")
-        engine = create_engine(f"postgresql://{user}:{password}@localhost:5432/{db}")
-        logger.info("Connected to DB ...")
-        return engine
-    except Exception as e:
-        logger.warning(f"Error Connecting to DB : {e}")
 
 def extract_raw(table_name , conn):
     logger.info(f"Extracting data from table : {table_name}")
@@ -50,6 +38,6 @@ if __name__ == "__main__":
     movies_raw  = extract_raw ("movies_raw", conn)
 
     #Step3: Transform the data (T)
-    
+
 
     #Step4: Load the transformed data into _bronze tables (L)
