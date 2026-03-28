@@ -21,3 +21,9 @@ pip install -r requirements.txt
 ```bash
 python Source-DMS/main.py
 ```
+
+## Step 4: First ETL (Raw -> Bronze)
+
+```bash
+python Bronze-ETL/main.py
+```
