@@ -19,25 +19,35 @@ This ETL is used to:
 The data transformation 
 '''
 
+def transform_movies(df):
+    logger.info(f"Step2- Applying transformation on movies_raw")
+    logger.info(f"Step2.1- Removing nulls df :  movies_raw")
+    #Remove nulls from id , popularity , titel 
+    df = df.dropna(subset=["id", "popularity", "title"])
+    logger.info(f"Step2.2- Removing duplications df :  movies_raw")
+    #Remove duplication from id
+    df = df.drop_duplicates(subset=["id"])
+
 
 def extract_raw(table_name , conn):
-    logger.info(f"Extracting data from table : {table_name}")
+    logger.info(f"Step1 - Extracting data from table : {table_name}")
     try:
         df = pd.read_sql(f"SELECT * FROM {table_name}" , conn)    
-        logger.info(f"Extracted {len(df)} rows from {table_name}")
+        logger.info(f"Step1 - Extracted {len(df)} rows from {table_name}")
         return df
     except Exception as e :
-        logger.warning(f"Error extracting data from DB : {e}")    
+        logger.warning(f"Step1 - Error extracting data from DB : {e}")    
 
 if __name__ == "__main__":
-    #Step1: Connect to DB 
+    #Step0: Connect to DB 
     conn = connect_db();
 
-    #step2: Extract the data from the db (E)
+    #step1: Extract the data from the db (E)
     ratings_raw = extract_raw ("ratings_raw" , conn)
     movies_raw  = extract_raw ("movies_raw", conn)
 
-    #Step3: Transform the data (T)
+    #Step2: Transform the data (T)
 
+    movies_filtered = transform_movies(movies_raw)
 
-    #Step4: Load the transformed data into _bronze tables (L)
+    #Step3: Load the transformed data into _bronze tables (L)
