@@ -3,6 +3,7 @@ sys.path.append(".")
 from Module.db_connector import connect_db
 import pandas as pd
 import logging
+import ast
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,15 +19,75 @@ This ETL is used to:
 
 The data transformation 
 '''
+def write_to_db(df,table_name, conn):
+    try:
+        logger.info(f"Step3 - Starting to write to db  , table name = {table_name}")
+        df.to_sql(table_name, conn, if_exists="replace", index=False)
+        logger.info(f"Data has been inserted to {table_name}")
+    except Exception as e:
+        logger.warning(f"Error writing to DB raw , table name = {table_name} : {e}")
+
+
+def extract_json_name(value):
+    try:
+        return ast.literal_eval(value)["name"]
+    except:
+        return None
+
+def extract_json_names(value):
+    try:
+        return [item["name"] for item in ast.literal_eval(value)]
+    except:
+        return []
 
 def transform_movies(df):
     logger.info(f"Step2- Applying transformation on movies_raw")
+
     logger.info(f"Step2.1- Removing nulls df :  movies_raw")
     #Remove nulls from id , popularity , titel 
     df = df.dropna(subset=["id", "popularity", "title"])
+    
     logger.info(f"Step2.2- Removing duplications df :  movies_raw")
     #Remove duplication from id
     df = df.drop_duplicates(subset=["id"])
+
+    logger.info(f"Step2.3- Dropping columns: adult, tagline, video")
+    df = df.drop(columns=["adult", "tagline", "video" , "poster_path"])
+
+    logger.info(f"Step2.4- Extracting JSON fields - collection_name")
+    # belongs_to_collection -> collection_name
+    df["collection_name"] = df["belongs_to_collection"].apply(extract_json_name)
+    df = df.drop(columns=["belongs_to_collection"])
+
+    # genres -> genres_names
+    logger.info(f"Step2.4- Extracting JSON fields - genres_names")
+    df["genres_names"] = df["genres"].apply(extract_json_names)
+    df = df.drop(columns=["genres"])
+
+    # production_companies -> production_companies_names
+    logger.info(f"Step2.4- Extracting JSON fields - production_companies_names")
+    df["production_companies_names"] = df["production_companies"].apply(extract_json_names)
+    df = df.drop(columns=["production_companies"])
+
+    # production_countries -> production_countries_names
+    logger.info(f"Step2.4- Extracting JSON fields - production_countries_names")
+    df["production_countries_names"] = df["production_countries"].apply(extract_json_names)
+    df = df.drop(columns=["production_countries"])
+
+    # spoken_languages -> spoken_languages_names
+    logger.info(f"Step2.4- Extracting JSON fields - spoken_languages_names")
+    df["spoken_languages_names"] = df["spoken_languages"].apply(extract_json_names)
+    df = df.drop(columns=["spoken_languages"])
+
+    # Convert lists to comma-separated strings
+    logger.info(f"Step2.5- Creating a comma seperated list for each column")
+    df["production_companies_names"] = df["production_companies_names"].apply(lambda x: ", ".join(x))
+    df["production_countries_names"] = df["production_countries_names"].apply(lambda x: ", ".join(x))
+    df["spoken_languages_names"] = df["spoken_languages_names"].apply(lambda x: ", ".join(x))
+    df["genres_names"] = df["genres_names"].apply(lambda x: ", ".join(x))
+
+    logger.info(f"Step2- Transformation completed")
+    return df
 
 
 def extract_raw(table_name , conn):
@@ -51,3 +112,5 @@ if __name__ == "__main__":
     movies_filtered = transform_movies(movies_raw)
 
     #Step3: Load the transformed data into _bronze tables (L)
+    
+    write_to_db(movies_filtered,"movies_bronze" , conn)
