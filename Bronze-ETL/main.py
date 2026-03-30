@@ -11,6 +11,7 @@ import sys
 sys.path.append(".")
 from Module.db_connector import connect_db
 from Module.get_raw import extract_raw
+from Module.write_db import write_to_db
 import pandas as pd
 import logging
 import ast
@@ -21,13 +22,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def write_to_db(df,table_name, conn):
-    try:
-        logger.info(f"Step3 - Starting to write to db  , table name = {table_name}")
-        df.to_sql(table_name, conn, if_exists="replace", index=False)
-        logger.info(f"Data has been inserted to {table_name}")
-    except Exception as e:
-        logger.warning(f"Error writing to DB raw , table name = {table_name} : {e}")
 
 
 def extract_json_name(value):

@@ -28,3 +28,8 @@ if __name__ == "__main__":
     #Step1: Read from Bronze 
     ratings_bronze = extract_raw("ratings_bronze",conn)
     movies_bronze = extract_raw("movies_bronze" , conn)
+
+    #Step2: Transform
+    ratings_movies_transformed = transform(ratings_bronze,movies_bronze)
+
+    
