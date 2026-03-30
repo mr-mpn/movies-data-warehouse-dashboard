@@ -27,3 +27,9 @@ python Source-DMS/main.py
 ```bash
 python Bronze-ETL/main.py
 ```
+
+## Step 5: Second ETL (Bronze -> Silver)
+
+```bash
+python Silver-ETL/main.py
+```
