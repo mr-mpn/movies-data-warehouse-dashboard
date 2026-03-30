@@ -1,3 +1,12 @@
+'''
+This ETL is used to:
+    - Extract the data from the _raw tables (E)
+    - Transform data (T)
+    - Load the updated values into the _bronze tables (L)
+
+The data transformation 
+'''
+
 import sys
 sys.path.append(".")
 from Module.db_connector import connect_db
@@ -11,14 +20,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-'''
-This ETL is used to:
-    - Extract the data from the _raw tables (E)
-    - Transform data (T)
-    - Load the updated values into the _bronze tables (L)
-
-The data transformation 
-'''
 def write_to_db(df,table_name, conn):
     try:
         logger.info(f"Step3 - Starting to write to db  , table name = {table_name}")
@@ -39,6 +40,21 @@ def extract_json_names(value):
         return [item["name"] for item in ast.literal_eval(value)]
     except:
         return []
+
+def transform_ratings(df):
+    logger.info(f"Step2- Applying transformation on ratings_raw")
+
+    logger.info(f"Step2.1- Removing nulls df :  ratings_raw")
+    #Remove nulls from id , popularity , titel 
+    df = df.dropna(subset=["userId","movieId","rating"])
+
+    
+    #Drop timestamp
+    logger.info(f"Step2.1- Drop timestamp df :  ratings_raw")
+    df = df.drop(columns = ["timestamp"])
+    logger.info(f"Step2- Transformation completed")
+    return df 
+
 
 def transform_movies(df):
     logger.info(f"Step2- Applying transformation on movies_raw")
@@ -108,9 +124,10 @@ if __name__ == "__main__":
     movies_raw  = extract_raw ("movies_raw", conn)
 
     #Step2: Transform the data (T)
-
+    ratings_filtered = transform_ratings(ratings_raw)
     movies_filtered = transform_movies(movies_raw)
 
     #Step3: Load the transformed data into _bronze tables (L)
     
+    write_to_db(ratings_filtered,"ratings_bronze" , conn)
     write_to_db(movies_filtered,"movies_bronze" , conn)
