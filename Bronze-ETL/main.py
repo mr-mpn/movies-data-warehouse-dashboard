@@ -15,6 +15,36 @@ from Module.write_db import write_to_db
 import pandas as pd
 import logging
 import ast
+from sqlalchemy import types
+
+movies_bronze_schema = {
+    "budget": types.BIGINT,
+    "homepage": types.TEXT,
+    "id": types.INTEGER,
+    "imdb_id": types.VARCHAR(20),
+    "original_language": types.VARCHAR(10),
+    "original_title": types.TEXT,
+    "overview": types.TEXT,
+    "popularity": types.FLOAT,
+    "release_date": types.TEXT,
+    "revenue": types.BIGINT,
+    "runtime": types.FLOAT,
+    "status": types.VARCHAR(50),
+    "title": types.TEXT,
+    "vote_average": types.FLOAT,
+    "vote_count": types.INTEGER,
+    "collection_name": types.TEXT,
+    "genres_names": types.TEXT,
+    "production_companies_names": types.TEXT,
+    "production_countries_names": types.TEXT,
+    "spoken_languages_names": types.TEXT,
+}
+
+ratings_bronze_schema = {
+    "userId": types.INTEGER,
+    "movieId": types.INTEGER,
+    "rating": types.FLOAT,
+}
 
 logging.basicConfig(
     level=logging.INFO,
@@ -115,5 +145,5 @@ if __name__ == "__main__":
 
     #Step3: Load the transformed data into _bronze tables (L)
     
-    write_to_db(ratings_filtered,"ratings_bronze" , conn)
-    write_to_db(movies_filtered,"movies_bronze" , conn)
+    write_to_db(ratings_filtered,"ratings_bronze" , conn , dtype = ratings_bronze_schema )
+    write_to_db(movies_filtered,"movies_bronze" , conn , dtype = movies_bronze_schema )

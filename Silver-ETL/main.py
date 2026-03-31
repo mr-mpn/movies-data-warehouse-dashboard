@@ -1,6 +1,7 @@
 '''
-This ETL reads data from the bronze layer , creates a complex table which contains information
-on both the ratings and the movies.
+This ETL:
+    - reads data from the bronze layer  \
+    - creates a complex table which contains informationon both the ratings and the movies.
 
 '''
 
@@ -8,6 +9,7 @@ import sys
 sys.path.append(".")
 from Module.db_connector import connect_db
 from Module.get_raw import extract_raw
+from Module.write_db import write_to_db
 import pandas as pd
 import logging
 
@@ -18,6 +20,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def transform(df_rating, df_movie):
+
+    df = pd.merge(df_rating, df_movie, left_on="movieId", right_on="id", how="left")
+    return df
 
 
 if __name__ == "__main__":
@@ -32,4 +38,6 @@ if __name__ == "__main__":
     #Step2: Transform
     ratings_movies_transformed = transform(ratings_bronze,movies_bronze)
 
-    
+
+    #Step3:
+    write_to_db(ratings_movies_transformed,"rating_movie_silver" , conn)
