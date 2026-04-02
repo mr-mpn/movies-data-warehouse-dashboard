@@ -3,9 +3,9 @@
 ## Step 1: Launch the DB
 
 ```bash
-cd ./db
+cd ./db/postgres
 docker-compose up -d
-cd ..
+cd ../..
 ```
 
 ## Step 2: Download dependencies and install them
@@ -34,7 +34,16 @@ python Bronze-ETL/main.py
 python Silver-ETL/main.py
 ```
 
-## Step 6: Launch the backend 
+
+## Step 6: Start MongoDb which is used to authenticate users 
+
+```bash
+cd ./db/mongo
+docker-compose up -d
+cd ../..
+```
+
+## Step 7: Launch the backend 
 
 ```bash
 uvicorn Dashboard.Backend.main:app --reload
