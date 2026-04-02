@@ -3,9 +3,9 @@
 ## Step 1: Launch the DB
 
 ```bash
-cd ./db/postgres
-docker-compose up -d
-cd ../..
+cd ./db/postgres;
+docker-compose up -d;
+cd ../..;
 ```
 
 ## Step 2: Download dependencies and install them
@@ -38,9 +38,9 @@ python Silver-ETL/main.py
 ## Step 6: Start MongoDb which is used to authenticate users 
 
 ```bash
-cd ./db/mongo
-docker-compose up -d
-cd ../..
+cd ./db/mongo;
+docker-compose up -d;
+cd ../..;
 ```
 
 ## Step 7: Launch the backend 

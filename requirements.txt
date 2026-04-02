@@ -6,4 +6,5 @@ fastapi
 uvicorn
 motor
 passlib[bcrypt]
+bcrypt==4.0.1
 python-jose
