@@ -33,3 +33,9 @@ python Bronze-ETL/main.py
 ```bash
 python Silver-ETL/main.py
 ```
+
+## Step 6: Launch the backend 
+
+```bash
+uvicorn Dashboard.Backend.main:app --reload
+```

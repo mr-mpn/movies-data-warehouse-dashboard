@@ -2,3 +2,4 @@
 venv/
 db/postgres_data/
 Module/__pycache__/
+Dashboard/Backend/__pycache__/
