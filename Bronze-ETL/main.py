@@ -86,7 +86,7 @@ def transform_movies(df):
 
     logger.info(f"Step2.1- Removing nulls df :  movies_raw")
     #Remove nulls from id , popularity , titel 
-    df = df.dropna(subset=["id", "popularity", "title"])
+    df = df.dropna(subset=["id", "popularity", "title" , "vote_count" , "vote_average"])
     
     logger.info(f"Step2.2- Removing duplications df :  movies_raw")
     #Remove duplication from id

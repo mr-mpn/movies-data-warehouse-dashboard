@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 def transform(df_rating, df_movie):
 
-    df = pd.merge(df_rating, df_movie, left_on="movieId", right_on="id", how="left")
+    df = pd.merge(df_rating, df_movie, left_on="movieId", right_on="id", how="inner")
     return df
 
 

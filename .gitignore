@@ -5,3 +5,4 @@ db/mongo/mongo_data/
 Module/__pycache__/
 Dashboard/Backend/__pycache__/
 Dashboard/Backend/DTO/__pycache__/
+.vscode/
