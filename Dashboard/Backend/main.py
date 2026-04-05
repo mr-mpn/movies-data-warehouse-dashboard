@@ -1,4 +1,4 @@
-from Dashboard.Backend.routers import auth
+from Dashboard.Backend.routers import auth,home
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -8,3 +8,4 @@ def health():
     return {"message": "Backend is working and alive"}
 
 app.include_router(auth.router, prefix="/auth")
+app.include_router(home.router)

@@ -2,7 +2,7 @@ import sys
 sys.path.append(".")
 from fastapi import APIRouter, HTTPException
 from passlib.context import CryptContext
-from Dashboard.Backend.DTO.models import UserSignUp
+from Dashboard.Backend.DTO.models import AuthenticationRequest,AuthenticationResponse
 from Module.mongo_connector import users_collection
 
 router = APIRouter()
@@ -12,7 +12,7 @@ pwd_context = CryptContext(schemes=["bcrypt"])
 
 
 @router.post("/sign_up")
-async def sign_up_user(user: UserSignUp):
+async def sign_up_user(user: AuthenticationRequest)->AuthenticationResponse:
     existing = await users_collection.find_one({"username": user.username})
     if existing:
         raise HTTPException(status_code=400, detail="Username already exists")
@@ -26,7 +26,7 @@ async def sign_up_user(user: UserSignUp):
 
 
 @router.post("/log_in")
-async def validate_log_in(user: UserSignUp):
+async def validate_log_in(user: AuthenticationRequest)->AuthenticationResponse:
     try:
         existing = await users_collection.find_one({"username": user.username})
         if not existing:
