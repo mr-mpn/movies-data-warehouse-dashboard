@@ -90,7 +90,7 @@ def transform_movies(df):
     
     logger.info(f"Step2.2- Removing duplications df :  movies_raw")
     #Remove duplication from id
-    df = df.drop_duplicates(subset=["id"])
+    df = df.drop_duplicates(subset=["id" , "title"])
 
     logger.info(f"Step2.3- Dropping columns: adult, tagline, video")
     df = df.drop(columns=["adult", "tagline", "video" , "poster_path"])

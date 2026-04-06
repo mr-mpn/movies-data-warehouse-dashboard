@@ -48,3 +48,11 @@ cd ../..;
 ```bash
 uvicorn Dashboard.Backend.main:app --reload
 ```
+
+## Step 8: Launch the frontend
+
+```bash
+cd Dashboard/Frontend
+npm install
+npm run dev
+```
