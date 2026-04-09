@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 import logging
@@ -17,3 +18,8 @@ def connect_db():
         return engine
     except Exception as e:
         logger.warning(f"Error Connecting to DB : {e}")
+
+def get_session():
+    engine = connect_db()
+    SessionLocal = sessionmaker(bind=engine)
+    return SessionLocal()

@@ -1,29 +1,34 @@
 from fastapi import APIRouter
 import sys
 sys.path.append(".")
-from Module.db_connector import connect_db
-from Dashboard.Backend.DTO.models import HomeResponse, PaginatedHomeResponse
-import pandas as pd
-from typing import List
+from Module.db_connector import get_session
+from Module.orm_models import Movie
+from Dashboard.Backend.DTO.models import PaginatedHomeResponse
+from sqlalchemy import func
 import math
 
 router = APIRouter()
 
 @router.get('/home')
-async def get_Home(page: int = 1, page_size: int = 10):
-    conn = connect_db()
-    offset = (page - 1) * page_size
+async def get_Home(page: int = 1, page_size: int = 10) -> PaginatedHomeResponse:
+    session = get_session()
+    try:
+        offset = (page - 1) * page_size
 
-    count_df = pd.read_sql("SELECT COUNT(*) as total FROM rating_movie_silver", conn)
-    total = int(count_df["total"][0])
-    total_pages = math.ceil(total / page_size)
+        total = session.query(func.count(Movie.id)).scalar()
+        total_pages = math.ceil(total / page_size)
 
-    df = pd.read_sql(f'''SELECT id, title, vote_average, vote_count
-                    FROM movies
-                    ORDER BY vote_average DESC LIMIT {page_size} OFFSET {offset}''', conn)
+        movies = session.query(Movie.id, Movie.title, Movie.vote_average, Movie.vote_count)\
+            .order_by(Movie.vote_average.desc())\
+            .offset(offset).limit(page_size).all()
 
-    return {
-        "movies": df.to_dict(orient="records"),
-        "total_pages": total_pages,
-        "page": page
-    }
+        return {
+            "movies": [
+                {"id": m.id, "title": m.title, "vote_average": m.vote_average, "vote_count": m.vote_count}
+                for m in movies
+            ],
+            "total_pages": total_pages,
+            "page": page
+        }
+    finally:
+        session.close()
