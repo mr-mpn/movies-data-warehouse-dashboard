@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 import sys
 sys.path.append(".")
 from Module.db_connector import get_session
@@ -10,7 +10,7 @@ import math
 router = APIRouter()
 
 @router.get('/home')
-async def get_Home(page: int = 1, page_size: int = 10) -> PaginatedHomeResponse:
+async def get_Home(page: int = Query(default=1, ge=1), page_size: int = Query(default=10, ge=1)) -> PaginatedHomeResponse:
     session = get_session()
     try:
         offset = (page - 1) * page_size

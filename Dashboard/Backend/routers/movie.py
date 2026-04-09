@@ -1,21 +1,24 @@
-from fastapi import APIRouter,HTTPException
-import pandas as pd
+from fastapi import APIRouter, HTTPException
 import sys
 sys.path.append(".")
-from Module.db_connector import connect_db
+from Module.db_connector import get_session
+from Module.orm_models import Movie
 from Dashboard.Backend.DTO.models import MovieResponse
 
 router = APIRouter()
 
 @router.get('/movie')
-async def get_movie(movie_id : int)->MovieResponse:
-    if not movie_id:
-        raise HTTPException(status_code=400, detail="The id  is required")
-    conn = connect_db()    
-    df = pd.read_sql(f'''
-                     SELECT id,title ,imdb_id, overview, release_date, spoken_languages_names FROM movies WHERE id={movie_id}
-                     ''' , conn )
-    results = df.to_dict(orient="records")
-    if not results:
-        raise HTTPException(status_code=404, detail="Movie not found")
-    return results[0]
+async def get_movie(movie_id: int) -> MovieResponse:
+    session = get_session()
+    try:
+        movie_info = session.query(
+            Movie.id, Movie.title, Movie.imdb_id, Movie.overview,
+            Movie.release_date, Movie.spoken_languages_names
+        ).filter(Movie.id == movie_id).first()
+
+        if not movie_info:
+            raise HTTPException(status_code=404, detail="Movie not found")
+
+        return movie_info._asdict()
+    finally:
+        session.close()
