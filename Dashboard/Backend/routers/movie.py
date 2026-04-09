@@ -13,7 +13,7 @@ async def get_movie(movie_id : int)->MovieResponse:
         raise HTTPException(status_code=400, detail="The id  is required")
     conn = connect_db()    
     df = pd.read_sql(f'''
-                     SELECT id,title , overview, release_date, spoken_languages_names FROM rating_movie_silver WHERE id={movie_id}
+                     SELECT id,title , overview, release_date, spoken_languages_names FROM movies WHERE id={movie_id}
                      ''' , conn )
     results = df.to_dict(orient="records")
     if not results:

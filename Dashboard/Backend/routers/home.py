@@ -19,8 +19,7 @@ async def get_Home(page: int = 1, page_size: int = 10):
     total_pages = math.ceil(total / page_size)
 
     df = pd.read_sql(f'''SELECT id, title, vote_average, vote_count
-                    FROM rating_movie_silver
-                    GRUOP BY title
+                    FROM movies
                     ORDER BY vote_average DESC LIMIT {page_size} OFFSET {offset}''', conn)
 
     return {

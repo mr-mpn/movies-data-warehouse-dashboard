@@ -145,5 +145,5 @@ if __name__ == "__main__":
 
     #Step3: Load the transformed data into _bronze tables (L)
     
-    write_to_db(ratings_filtered,"ratings_bronze" , conn , dtype = ratings_bronze_schema )
-    write_to_db(movies_filtered,"movies_bronze" , conn , dtype = movies_bronze_schema )
+    write_to_db(ratings_filtered,"ratings" , conn , dtype = ratings_bronze_schema )
+    write_to_db(movies_filtered,"movies" , conn , dtype = movies_bronze_schema )
