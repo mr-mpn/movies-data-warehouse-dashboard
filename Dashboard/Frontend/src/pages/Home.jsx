@@ -181,6 +181,19 @@ function Home({ user, onLoginClick, onLogout }) {
                       </div>
                     ) : null
                   )}
+                  {selectedMovie.imdb_id && (
+                    <div className="modal-field">
+                      <a
+                        className="imdb-link"
+                        href={`https://www.imdb.com/title/${selectedMovie.imdb_id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="View on IMDb"
+                      >
+                        IMDb
+                      </a>
+                    </div>
+                  )}
                 </div>
               </>
             )}

@@ -336,3 +336,26 @@
   font-weight: 600;
   color: var(--text-h);
 }
+
+/* IMDb Link */
+.imdb-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  background: #f5c518;
+  color: #000;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--sans);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+  width: fit-content;
+}
+
+.imdb-link:hover {
+  opacity: 0.85;
+}

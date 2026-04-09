@@ -25,3 +25,4 @@ class MovieResponse(BaseModel):
     overview: str | None = None
     release_date: str | None = None
     spoken_languages_names: str | None = None
+    imdb_id: str | None = None
